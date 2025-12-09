@@ -1,0 +1,46 @@
+﻿@model IEnumerable<WEBPROJE1.Models.Uye>
+
+@{
+    ViewData["Title"] = "Üye Yönetimi";
+}
+
+<div class="container mt-4">
+    <h2>Üye Listesi</h2>
+    <hr />
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Ad Soyad</th>
+                    <th>Email</th>
+                    <th>Kullanıcı Adı</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Ad @item.Soyad</td>
+                        <td>@item.Email</td>
+                        <td>@item.UserName</td>
+                        <td>
+                            @if (item.UserName != User.Identity.Name)
+                            {
+                                <form asp-action="Sil" method="post" onsubmit="return confirm('Bu üyeyi silmek istediğinize emin misiniz?');">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm">🗑 Sil</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Admin (Siz)</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
