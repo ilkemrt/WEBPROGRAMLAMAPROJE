@@ -1,0 +1,33 @@
+﻿@model SPORSALONUPROJE.ViewModels.RandevuFormViewModel
+
+@{
+    ViewData["Title"] = "Randevu Al";
+}
+
+<h2>Randevu Al</h2>
+
+<form asp-action="RandevuAl" method="post">
+    <div class="form-group">
+        <label asp-for="AntrenorId">Antrenör</label>
+        <select asp-for="AntrenorId" class="form-control" asp-items="@(new SelectList(Model.Antrenorler, "Id", "AdSoyad"))">
+            <option value="">Seçiniz</option>
+        </select>
+        <span asp-validation-for="AntrenorId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HizmetId">Hizmet</label>
+        <select asp-for="HizmetId" class="form-control" asp-items="@(new SelectList(Model.Hizmetler, "Id", "Ad"))">
+            <option value="">Seçiniz</option>
+        </select>
+        <span asp-validation-for="HizmetId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BaslangicZamani">Tarih ve Saat</label>
+        <input asp-for="BaslangicZamani" type="datetime-local" class="form-control" />
+        <span asp-validation-for="BaslangicZamani" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Randevu Al</button>
+</form>

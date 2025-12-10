@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Kullanıcı Paneli";
+}
+
+<h2>Merhaba @User.Identity.Name 👋</h2>
+
+<p>Hoş geldiniz, aşağıdaki işlemleri gerçekleştirebilirsiniz:</p>
+
+<div class="row">
+    <div class="col-md-4">
+        <a href="/Randevu/Al" class="btn btn-outline-primary btn-block">Randevu Al</a>
+    </div>
+    <div class="col-md-4">
+        <a href="/Randevu/Randevularim" class="btn btn-outline-info btn-block">Randevularım</a>
+    </div>
+    <div class="col-md-4">
+        <a href="/Antrenor" class="btn btn-outline-success btn-block">Antrenörleri Gör</a>
+    </div>
+</div>

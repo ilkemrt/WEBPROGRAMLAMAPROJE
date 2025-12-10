@@ -1,0 +1,37 @@
+﻿@model IEnumerable<SPORSALONUPROJE.Models.Antrenor>
+@{
+    ViewData["Title"] = "Antrenörler";
+}
+
+<h2>Antrenör Listesi</h2>
+<a asp-action="Ekle" class="btn btn-success mb-2">Yeni Antrenör Ekle</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Ad Soyad</th>
+            <th>Açıklama</th>
+            <th>Hizmetler</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.AdSoyad</td>
+                <td>@a.Aciklama</td>
+                <td>
+                    @foreach (var h in a.AntrenorHizmetleri.Select(ah => ah.Hizmet.Ad))
+                    {
+                        <span class="badge bg-info text-dark">@h</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Guncelle" asp-route-id="@a.Id" class="btn btn-warning btn-sm">Düzenle</a>
+                    <a asp-action="Sil" asp-route-id="@a.Id" class="btn btn-danger btn-sm" onclick="return confirm('Silmek istediğinize emin misiniz?')">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

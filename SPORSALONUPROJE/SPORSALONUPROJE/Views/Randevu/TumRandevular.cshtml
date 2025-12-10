@@ -1,0 +1,52 @@
+﻿@model IEnumerable<SPORSALONUPROJE.Models.Randevu>
+
+@{
+    ViewData["Title"] = "Tüm Randevular";
+}
+
+<h2>Tüm Randevular</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Kullanıcı</th>
+            <th>Antrenör</th>
+            <th>Hizmet</th>
+            <th>Tarih & Saat</th>
+            <th>Durum</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.Uye.Email</td>
+                <td>@r.Antrenor.AdSoyad</td>
+                <td>@r.Hizmet.Ad</td>
+                <td>@r.BaslangicZamani</td>
+                <td>
+                    @if (r.IptalEdildiMi)
+                    {
+                        <span class="badge bg-danger">İptal</span>
+                    }
+                    else if (r.OnaylandiMi)
+                    {
+                        <span class="badge bg-success">Onaylı</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">Bekliyor</span>
+                    }
+                </td>
+                <td>
+                    @if (!r.IptalEdildiMi && !r.OnaylandiMi)
+                    {
+                        <a asp-action="Onayla" asp-route-id="@r.Id" class="btn btn-sm btn-success">Onayla</a>
+                        <a asp-action="IptalEt" asp-route-id="@r.Id" class="btn btn-sm btn-danger">İptal</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

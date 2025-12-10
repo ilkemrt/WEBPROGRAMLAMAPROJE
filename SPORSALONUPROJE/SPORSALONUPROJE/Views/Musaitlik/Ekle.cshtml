@@ -1,0 +1,29 @@
+﻿@model SPORSALONUPROJE.Models.AntrenorMusaitlik
+
+<h2>Müsaitlik Ekle</h2>
+
+<form asp-action="Ekle" method="post">
+    <input type="hidden" asp-for="AntrenorId" />
+
+    <div class="form-group">
+        <label asp-for="Gun"></label>
+        <select asp-for="Gun" class="form-control">
+            @foreach (var day in Enum.GetValues(typeof(DayOfWeek)))
+            {
+                <option value="@day">@day</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BaslangicSaat"></label>
+        <input asp-for="BaslangicSaat" class="form-control" placeholder="08:00:00" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BitisSaat"></label>
+        <input asp-for="BitisSaat" class="form-control" placeholder="17:00:00" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Kaydet</button>
+</form>
