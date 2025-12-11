@@ -1,0 +1,12 @@
+﻿@using FitnessCenter.Web.Models
+@model RegisterViewModel
+
+<h2>Kayıt Ol</h2>
+
+<form asp-action="Register" method="post">
+    <input asp-for="FirstName" placeholder="Ad" class="form-control" />
+    <input asp-for="LastName" placeholder="Soyad" class="form-control" />
+    <input asp-for="Email" placeholder="Email" class="form-control" />
+    <input asp-for="Password" placeholder="Şifre" type="password" class="form-control" />
+    <button class="btn btn-primary mt-3">Kayıt Ol</button>
+</form>

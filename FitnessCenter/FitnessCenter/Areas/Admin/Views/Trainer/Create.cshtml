@@ -1,0 +1,24 @@
+﻿@using FitnessCenter.Web.Models
+@model Trainer
+
+<h2>Yeni Antrenör Ekle</h2>
+
+<form asp-action="Create" method="post">
+
+    <label>Ad</label>
+    <input asp-for="FirstName" class="form-control" />
+
+    <label>Soyad</label>
+    <input asp-for="LastName" class="form-control" />
+
+    <label>Biyografi</label>
+    <textarea asp-for="Biography" class="form-control"></textarea>
+
+    <label>Hizmet</label>
+    <select asp-for="ServiceId" asp-items="ViewBag.Services" class="form-control"></select>
+
+    <label>Resim URL</label>
+    <input asp-for="ImageUrl" class="form-control" />
+
+    <button class="btn btn-success mt-3">Kaydet</button>
+</form>

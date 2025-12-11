@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Service>
+
+@{
+    ViewData["Title"] = "Fitness Center";
+}
+
+<!-- ======= HERO SECTION ======= -->
+<section class="hero-section" style="
+    height: 70vh;
+    background-image: url('https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg');
+    background-size: cover;
+    background-position: center;
+    position: relative;">
+
+    <div style="
+        background-color: rgba(0,0,0,0.5);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;">
+
+        <div class="text-center text-white">
+            <h1 class="display-3 fw-bold">Fitness Center'a Hoş Geldiniz</h1>
+            <p class="fs-4">Profesyonel eğitmenlerimizle sağlıklı bir yaşama adım atın</p>
+            <a href="#services" class="btn btn-primary btn-lg mt-3">Hizmetleri Keşfet</a>
+        </div>
+
+    </div>
+</section>
+
+<!-- ======= HİZMETLER ======= -->
+<section id="services" class="container mt-5">
+    <h2 class="text-center mb-4">Hizmetlerimiz</h2>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-lg">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 220px; object-fit: cover;" />
+                    }
+                    <div class="card-body">
+                        <h4>@item.Name</h4>
+                        <p>@item.Description</p>
+                        <p><strong>Süre:</strong> @item.Duration dk</p>
+                        <p><strong>Fiyat:</strong> @item.Price ₺</p>
+
+                        <!-- EĞİTİM AL BUTONU -->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a asp-controller="Appointment" asp-action="Create" asp-route-serviceId="@item.Id"
+                               class="btn btn-success">Eğitim Al</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-primary">
+                                Eğitime Başla
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>

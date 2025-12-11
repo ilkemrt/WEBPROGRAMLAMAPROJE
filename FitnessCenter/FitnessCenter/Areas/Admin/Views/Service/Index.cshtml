@@ -1,0 +1,32 @@
+﻿@using FitnessCenter.Web.Models
+@model IEnumerable<Service>
+
+<h2>Hizmetler</h2>
+
+<a class="btn btn-primary mb-3" asp-action="Create">Yeni Hizmet</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Ad</th>
+            <th>Süre</th>
+            <th>Fiyat</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Duration dk</td>
+                <td>@item.Price ₺</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Düzenle</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

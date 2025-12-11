@@ -1,0 +1,9 @@
+C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\FitnessCenter.csproj.AssemblyReference.cache
+C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\FitnessCenter.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\FitnessCenter.AssemblyInfoInputs.cache
+C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\FitnessCenter.AssemblyInfo.cs
+C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\FitnessCenter.csproj.CoreCompileInputs.cache
+C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\FitnessCenter.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\FitnessCenter.RazorAssemblyInfo.cache
+C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\FitnessCenter.RazorAssemblyInfo.cs

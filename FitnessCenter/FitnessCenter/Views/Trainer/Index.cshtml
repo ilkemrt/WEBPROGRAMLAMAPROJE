@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Trainer>
+
+<h2 class="text-center mb-4">Antrenörlerimiz</h2>
+
+<div class="row">
+    @foreach (var t in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg">
+
+                @if (!string.IsNullOrEmpty(t.ImageUrl))
+                {
+                    <img src="@t.ImageUrl" class="card-img-top" style="height: 260px; object-fit: cover;" />
+                }
+
+                <div class="card-body">
+                    <h3>@t.FirstName @t.LastName</h3>
+                    <h6 class="text-muted">@t.Service?.Name Eğitmeni</h6>
+
+                    <p>@t.Biography</p>
+
+                    <a asp-action="Details" asp-route-id="@t.Id" class="btn btn-outline-primary">
+                        Detay
+                    </a>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Appointment"
+                           asp-action="CreateByTrainer"
+                           asp-route-trainerId="@t.Id"
+                           class="btn btn-success ms-2">
+                            Randevu Al
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-primary ms-2">
+                            Giriş Yap & Randevu Al
+                        </a>
+                    }
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .card:hover {
+        transform: scale(1.04);
+        transition: .25s;
+    }
+</style>

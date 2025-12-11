@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Service>
+
+<h2 class="text-center mb-4">Hizmetlerimiz</h2>
+
+<div class="row">
+    @foreach (var service in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg">
+
+                @if (!string.IsNullOrEmpty(service.ImageUrl))
+                {
+                    <img src="@service.ImageUrl" class="card-img-top" style="height: 220px; object-fit: cover;" />
+                }
+
+                <div class="card-body">
+                    <h3>@service.Name</h3>
+                    <p>@service.Description</p>
+
+                    <p>
+                        <b>Süre:</b> @service.Duration dk<br />
+                        <b>Fiyat:</b> @service.Price ₺
+                    </p>
+
+                    <a asp-action="Details" asp-route-id="@service.Id" class="btn btn-outline-primary">
+                        Detay
+                    </a>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Appointment" asp-action="Create" asp-route-serviceId="@service.Id"
+                           class="btn btn-success">Eğitim Al</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-primary">
+                            Eğitime Başla
+                        </a>
+                    }
+                </div>
+
+            </div>
+        </div>
+    }
+</div>

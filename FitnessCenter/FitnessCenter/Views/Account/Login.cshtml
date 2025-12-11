@@ -1,0 +1,10 @@
+﻿@using FitnessCenter.Web.Models
+@model LoginViewModel
+
+<h2>Giriş Yap</h2>
+
+<form asp-action="Login" method="post">
+    <input asp-for="Email" placeholder="Email" class="form-control" />
+    <input asp-for="Password" placeholder="Şifre" type="password" class="form-control" />
+    <button class="btn btn-success mt-3">Giriş Yap</button>
+</form>

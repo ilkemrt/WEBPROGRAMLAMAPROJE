@@ -1,0 +1,26 @@
+﻿@using FitnessCenter.Web.Models
+@using FitnessCenter.Web
+@model IEnumerable<ApplicationUser>
+
+<h2>Üyeler</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Ad Soyad</th>
+            <th>Email</th>
+            <th>User Id</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName @user.LastName</td>
+                <td>@user.Email</td>
+                <td>@user.Id</td>
+            </tr>
+        }
+    </tbody>
+</table>

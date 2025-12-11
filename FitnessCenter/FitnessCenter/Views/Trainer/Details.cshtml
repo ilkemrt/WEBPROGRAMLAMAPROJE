@@ -1,0 +1,39 @@
+﻿@model Trainer
+
+<div class="container mt-4">
+
+    <div class="row">
+
+        <div class="col-md-5">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" class="img-fluid rounded shadow" style="height: 350px; object-fit: cover;" />
+            }
+        </div>
+
+        <div class="col-md-7">
+            <h2>@Model.FirstName @Model.LastName</h2>
+            <h5 class="text-muted">@Model.Service?.Name Eğitmeni</h5>
+
+            <p class="mt-3">@Model.Biography</p>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Appointment"
+                   asp-action="CreateByTrainer"
+                   asp-route-trainerId="@Model.Id"
+                   class="btn btn-success btn-lg">
+                    Bu Antrenörle Randevu Al
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg">
+                    Giriş Yap & Randevu Al
+                </a>
+            }
+        </div>
+
+    </div>
+
+</div>

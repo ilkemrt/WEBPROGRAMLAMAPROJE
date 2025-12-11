@@ -1,0 +1,39 @@
+﻿@model FitnessCenter.Web.Models.Service
+
+
+<h2>Yeni Hizmet Ekle</h2>
+
+
+<div class="card p-4 shadow">
+    <form asp-area="Admin" asp-controller="Service" asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label class="form-label">Hizmet Adı</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Açıklama</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Süre (dk)</label>
+            <input asp-for="Duration" type="number" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fiyat</label>
+            <input asp-for="Price" type="number" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Resim URL</label>
+            <input asp-for="ImageUrl" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">Kaydet</button>
+    </form>
+</div>

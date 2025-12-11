@@ -1,0 +1,33 @@
+﻿@using FitnessCenter.Web.Models.ViewModels
+@model AppointmentCreateViewModel
+
+<h2>Randevu Oluştur</h2>
+
+<div class="card shadow p-4">
+
+    <form asp-action="Create" method="post">
+
+        <input type="hidden" asp-for="ServiceId" />
+        <input type="hidden" asp-for="Duration" />
+        <input type="hidden" asp-for="Price" />
+
+        <h4>@Model.ServiceName</h4>
+
+        @if (!string.IsNullOrEmpty(Model.TrainerName))
+        {
+            <p><b>Antrenör:</b> @Model.TrainerName</p>
+        }
+
+        <label class="mt-3">Antrenör</label>
+        <select asp-for="TrainerId" class="form-control" asp-items="@(new SelectList(Model.Trainers, "Id", "FirstName"))"></select>
+
+        <label class="mt-3">Tarih & Saat</label>
+        <input asp-for="StartTime" type="datetime-local" class="form-control" />
+
+        <p class="mt-3"><b>Ücret:</b> @Model.Price ₺</p>
+
+        <button class="btn btn-success mt-3">Randevuyu Kaydet</button>
+
+    </form>
+
+</div>
