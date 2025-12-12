@@ -1,5 +1,6 @@
 ﻿using FitnessCenter.Web.Data;
 using FitnessCenter.Web.Models;
+using FitnessCenter.Web.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace FitnessCenter.Web.Areas.Admin.Controllers
         {
             var trainers = await _context.Trainers
                 .Include(t => t.Service)
+                .Include(t => t.WorkingHours)
                 .ToListAsync();
 
             return View(trainers);
@@ -35,7 +37,7 @@ namespace FitnessCenter.Web.Areas.Admin.Controllers
 
         // CREATE POST
         [HttpPost]
-        public async Task<IActionResult> Create(Trainer model)
+        public async Task<IActionResult> Create(TrainerCreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -43,38 +45,105 @@ namespace FitnessCenter.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            _context.Trainers.Add(model);
+            var trainer = new Trainer
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Biography = model.Biography,
+                ImageUrl = model.ImageUrl,
+                ServiceId = model.ServiceId
+            };
+
+            _context.Trainers.Add(trainer);
+            await _context.SaveChangesAsync();
+
+            // 🔥 ÇALIŞMA GÜNLERİ KAYDI
+            foreach (var day in model.WorkingDays)
+            {
+                var workingHour = new TrainerWorkingHour
+                {
+                    TrainerId = trainer.Id,
+                    DayOfWeek = day,
+                    StartTime = model.StartTime,
+                    EndTime = model.EndTime
+                };
+
+                _context.TrainerWorkingHours.Add(workingHour);
+            }
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
-
-        // EDIT GET
         public async Task<IActionResult> Edit(int id)
         {
-            var trainer = await _context.Trainers.FindAsync(id);
+            var trainer = await _context.Trainers
+                .Include(t => t.WorkingHours)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
             if (trainer == null)
                 return NotFound();
 
-            ViewBag.Services = new SelectList(_context.Services, "Id", "Name", trainer.ServiceId);
-            return View(trainer);
+            var vm = new TrainerEditViewModel
+            {
+                Id = trainer.Id,
+                FirstName = trainer.FirstName,
+                LastName = trainer.LastName,
+                Biography = trainer.Biography,
+                ImageUrl = trainer.ImageUrl,
+                ServiceId = trainer.ServiceId,
+                WorkingDays = trainer.WorkingHours.Select(w => w.DayOfWeek).ToList(),
+                StartTime = trainer.WorkingHours.FirstOrDefault()?.StartTime ?? new TimeOnly(8, 0),
+                EndTime = trainer.WorkingHours.FirstOrDefault()?.EndTime ?? new TimeOnly(17, 0)
+            };
+
+            ViewBag.Services = new SelectList(_context.Services, "Id", "Name", vm.ServiceId);
+            return View(vm);
         }
 
-        // EDIT POST
+
         [HttpPost]
-        public async Task<IActionResult> Edit(Trainer model)
+        public async Task<IActionResult> Edit(TrainerEditViewModel vm)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Services = new SelectList(_context.Services, "Id", "Name", model.ServiceId);
-                return View(model);
+                ViewBag.Services = new SelectList(_context.Services, "Id", "Name", vm.ServiceId);
+                return View(vm);
             }
 
-            _context.Trainers.Update(model);
-            await _context.SaveChangesAsync();
+            var trainer = await _context.Trainers
+                .Include(t => t.WorkingHours)
+                .FirstOrDefaultAsync(t => t.Id == vm.Id);
 
+            if (trainer == null)
+                return NotFound();
+
+            trainer.FirstName = vm.FirstName;
+            trainer.LastName = vm.LastName;
+            trainer.Biography = vm.Biography;
+            trainer.ImageUrl = vm.ImageUrl;
+            trainer.ServiceId = vm.ServiceId;
+
+            // 🔥 eski saatleri sil
+            _context.TrainerWorkingHours.RemoveRange(trainer.WorkingHours);
+
+            // 🔥 yenilerini ekle
+            foreach (var day in vm.WorkingDays)
+            {
+                _context.TrainerWorkingHours.Add(new TrainerWorkingHour
+                {
+                    TrainerId = trainer.Id,
+                    DayOfWeek = day,
+                    StartTime = vm.StartTime,
+                    EndTime = vm.EndTime
+                });
+            }
+
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+
+
 
         // DELETE
         public async Task<IActionResult> Delete(int id)

@@ -1,0 +1,46 @@
+﻿@model FitnessCenter.Web.Models.Service
+
+@{
+    ViewData["Title"] = "Hizmet Düzenle";
+}
+
+<h2>Hizmet Düzenle</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label class="form-label">Hizmet Adı</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Açıklama</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Süre (dk)</label>
+        <input asp-for="Duration" type="number" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Fiyat</label>
+        <input asp-for="Price" type="number" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Resim URL</label>
+        <input asp-for="ImageUrl" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-warning">Güncelle</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

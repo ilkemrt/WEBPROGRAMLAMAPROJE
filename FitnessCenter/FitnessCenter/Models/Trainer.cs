@@ -26,5 +26,6 @@ namespace FitnessCenter.Web.Models
 
         // Navigation
         public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<TrainerWorkingHour> WorkingHours { get; set; }
     }
 }

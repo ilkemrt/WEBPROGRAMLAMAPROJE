@@ -13,36 +13,57 @@ namespace FitnessCenter.Web.Data
 
         public DbSet<Service> Services { get; set; }
         public DbSet<Trainer> Trainers { get; set; }
+        public DbSet<TrainerWorkingHour> TrainerWorkingHours { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // Trainer -> Service (1-n)
+            // -------------------------
+            // Trainer -> Service (N:1)
+            // -------------------------
             builder.Entity<Trainer>()
                 .HasOne(t => t.Service)
                 .WithMany(s => s.Trainers)
                 .HasForeignKey(t => t.ServiceId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Appointment -> Trainer
+            // -------------------------
+            // Trainer -> WorkingHours (1:N)
+            // -------------------------
+            builder.Entity<TrainerWorkingHour>()
+                .HasOne(w => w.Trainer)
+                .WithMany(t => t.WorkingHours)
+                .HasForeignKey(w => w.TrainerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // -------------------------
+            // Appointment -> Trainer (N:1)
+            // -------------------------
             builder.Entity<Appointment>()
                 .HasOne(a => a.Trainer)
                 .WithMany(t => t.Appointments)
-                .HasForeignKey(a => a.TrainerId);
+                .HasForeignKey(a => a.TrainerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Appointment -> Member
+            // -------------------------
+            // Appointment -> Member (N:1)
+            // -------------------------
             builder.Entity<Appointment>()
                 .HasOne(a => a.Member)
                 .WithMany()
-                .HasForeignKey(a => a.MemberId);
+                .HasForeignKey(a => a.MemberId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Appointment -> Service
+            // -------------------------
+            // Appointment -> Service (N:1)
+            // -------------------------
             builder.Entity<Appointment>()
                 .HasOne(a => a.Service)
                 .WithMany(s => s.Appointments)
-                .HasForeignKey(a => a.ServiceId);
+                .HasForeignKey(a => a.ServiceId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

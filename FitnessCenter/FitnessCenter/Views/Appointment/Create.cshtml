@@ -1,33 +1,63 @@
-﻿@using FitnessCenter.Web.Models.ViewModels
-@model AppointmentCreateViewModel
+﻿@model FitnessCenter.Web.Models.ViewModels.AppointmentCreateViewModel
 
-<h2>Randevu Oluştur</h2>
+@{
+    ViewData["Title"] = "Randevu Al";
+}
+
+<h2 class="mb-4">Randevu Al</h2>
 
 <div class="card shadow p-4">
 
+    <div class="alert alert-info mb-4">
+        <h5 class="mb-1">@Model.ServiceName</h5>
+        <div>
+            <strong>Süre:</strong> @Model.Duration dk |
+            <strong>Ücret:</strong> @Model.Price ₺
+        </div>
+    </div>
+
     <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
 
         <input type="hidden" asp-for="ServiceId" />
-        <input type="hidden" asp-for="Duration" />
-        <input type="hidden" asp-for="Price" />
 
-        <h4>@Model.ServiceName</h4>
+        <!-- ANTRENÖR -->
+        <div class="mb-3">
+            <label class="form-label">Antrenör</label>
+            <select asp-for="TrainerId" class="form-select">
+                <option value="">-- Antrenör Seçiniz --</option>
+                @foreach (var t in Model.AvailableTrainers)
+                {
+                    <option value="@t.Id">@t.FullName</option>
+                }
+            </select>
+            <span asp-validation-for="TrainerId" class="text-danger"></span>
+        </div>
 
-        @if (!string.IsNullOrEmpty(Model.TrainerName))
-        {
-            <p><b>Antrenör:</b> @Model.TrainerName</p>
-        }
+        <!-- TARİH -->
+        <div class="mb-3">
+            <label class="form-label">Tarih</label>
+            <input asp-for="Date" type="date" class="form-control" />
+            <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
 
-        <label class="mt-3">Antrenör</label>
-        <select asp-for="TrainerId" class="form-control" asp-items="@(new SelectList(Model.Trainers, "Id", "FirstName"))"></select>
+        <!-- SAAT -->
+        <div class="mb-3">
+            <label class="form-label">Saat</label>
+            <select asp-for="StartHour" class="form-select">
+                <option value="">-- Saat Seçiniz --</option>
+                @foreach (var hour in Model.AvailableHours)
+                {
+                    <option value="@hour">@hour.ToString(@"hh\:mm")</option>
+                }
+            </select>
+            <span asp-validation-for="StartHour" class="text-danger"></span>
+        </div>
 
-        <label class="mt-3">Tarih & Saat</label>
-        <input asp-for="StartTime" type="datetime-local" class="form-control" />
-
-        <p class="mt-3"><b>Ücret:</b> @Model.Price ₺</p>
-
-        <button class="btn btn-success mt-3">Randevuyu Kaydet</button>
-
+        <button type="submit" class="btn btn-success mt-3">
+            Randevu Oluştur
+        </button>
     </form>
-
 </div>
+
+

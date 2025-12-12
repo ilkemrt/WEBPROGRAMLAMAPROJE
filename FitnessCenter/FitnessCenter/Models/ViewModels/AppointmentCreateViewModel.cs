@@ -1,20 +1,26 @@
-﻿using FitnessCenter.Web.Models;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 
 namespace FitnessCenter.Web.Models.ViewModels
 {
     public class AppointmentCreateViewModel
     {
         public int ServiceId { get; set; }
-        public string ServiceName { get; set; }
-
+        public string ServiceName { get; set; } = "";
+      
         public int TrainerId { get; set; }
-        public string TrainerName { get; set; }
 
-        public DateTime StartTime { get; set; }
+        // sadece tarih
+        public DateTime Date { get; set; } = DateTime.Today;
 
-        public decimal Price { get; set; }
+        // sadece saat (08:00 vs)
+        [Required(ErrorMessage = "Saat seçmek zorunludur")]
+        public TimeSpan StartHour { get; set; }
+
         public int Duration { get; set; }
+        public decimal Price { get; set; }
 
-        public IEnumerable<Trainer> Trainers { get; set; }
+        public List<TrainerSelectItem> AvailableTrainers { get; set; } = new();
+        public List<TimeSpan> AvailableHours { get; set; } = new();
     }
 }

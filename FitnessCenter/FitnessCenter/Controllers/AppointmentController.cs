@@ -16,67 +16,114 @@ namespace FitnessCenter.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppointmentService _appointmentService;
 
-        public AppointmentController(AppDbContext context,
-                                     UserManager<ApplicationUser> userManager,
-                                     AppointmentService appointmentService)
+        public AppointmentController(
+            AppDbContext context,
+            UserManager<ApplicationUser> userManager,
+            AppointmentService appointmentService)
         {
             _context = context;
             _userManager = userManager;
             _appointmentService = appointmentService;
         }
 
-        // -----------------------------
-        // HİZMETTEN RANDEVU AL
-        // -----------------------------
+        [HttpGet]
         public async Task<IActionResult> Create(int serviceId)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Login", "Account");
 
 
-            var service = await _context.Services.FindAsync(serviceId);
+            var service = await _context.Services.AsNoTracking().FirstOrDefaultAsync(s => s.Id == serviceId);
+            if (service == null) return NotFound();
+
             var trainers = await _context.Trainers
+                .AsNoTracking()
                 .Where(t => t.ServiceId == serviceId)
+                .Select(t => new TrainerSelectItem
+                {
+                    Id = t.Id,
+                    FullName = t.FirstName + " " + t.LastName
+                })
                 .ToListAsync();
+
+            if (trainers.Count == 0)
+            {
+                // Hizmet var ama eğitmen yoksa kullanıcıya düzgün mesaj verelim
+                TempData["Error"] = "Bu hizmet için henüz antrenör tanımlanmamış.";
+                return RedirectToAction("Details", "Service", new { id = serviceId });
+            }
 
             var vm = new AppointmentCreateViewModel
             {
-                ServiceId = serviceId,
+                ServiceId = service.Id,
                 ServiceName = service.Name,
-                Price = service.Price,
                 Duration = service.Duration,
-                Trainers = trainers
+                Price = service.Price,
+                AvailableTrainers = trainers,
+                Date = DateTime.Today,
+                TrainerId = trainers[0].Id // default ilk trainer
             };
+
+            vm.AvailableHours = await _appointmentService.GetAvailableHours(vm.TrainerId, vm.Date, vm.Duration);
+
+            // default saat: ilk müsait
+            if (vm.AvailableHours.Count > 0)
+                vm.StartHour = vm.AvailableHours[0];
 
             return View(vm);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AppointmentCreateViewModel vm)
         {
-            var userId = _userManager.GetUserId(User);
+
             var service = await _context.Services.FindAsync(vm.ServiceId);
+            if (service == null) return NotFound();
 
-            // Müsaitlik kontrolü
-            var available = await _appointmentService.IsTrainerAvailable(
-                vm.TrainerId,
-                vm.StartTime,
-                service.Duration
-            );
+            // dropdownlar her durumda dolmalı
+            vm.AvailableTrainers = await _context.Trainers
+                .AsNoTracking()
+                .Where(t => t.ServiceId == vm.ServiceId)
+                .Select(t => new TrainerSelectItem
+                {
+                    Id = t.Id,
+                    FullName = t.FirstName + " " + t.LastName
+                })
+                .ToListAsync();
 
-            if (!available)
+            vm.Duration = service.Duration;
+            vm.Price = service.Price;
+            vm.ServiceName = service.Name;
+
+            // Trainer seçildiyse saatleri tekrar doldur
+            if (vm.TrainerId > 0)
+                vm.AvailableHours = await _appointmentService.GetAvailableHours(vm.TrainerId, vm.Date, vm.Duration);
+
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            // Güvenlik: Trainer gerçekten bu service'e ait mi?
+            var trainerOk = await _context.Trainers.AnyAsync(t => t.Id == vm.TrainerId && t.ServiceId == vm.ServiceId);
+            if (!trainerOk)
             {
-                ModelState.AddModelError("", "Bu saat dolu! Lütfen başka bir zaman seçin.");
-                vm.Trainers = await _context.Trainers.Where(t => t.ServiceId == vm.ServiceId).ToListAsync();
+                ModelState.AddModelError(nameof(vm.TrainerId), "Seçilen antrenör bu hizmete ait değil.");
+                return View(vm);
+            }
+
+            var startTime = vm.Date.Date + vm.StartHour;
+
+            var isAvailable = await _appointmentService.IsTrainerAvailable(vm.TrainerId, startTime, service.Duration);
+            if (!isAvailable)
+            {
+                ModelState.AddModelError("", "Seçilen gün/saat için antrenör müsait değil.");
                 return View(vm);
             }
 
             var appointment = new Appointment
             {
-                MemberId = userId,
+                MemberId = _userManager.GetUserId(User)!,
                 TrainerId = vm.TrainerId,
                 ServiceId = vm.ServiceId,
-                StartTime = vm.StartTime,
+                StartTime = startTime,
                 Duration = service.Duration,
                 Price = service.Price,
                 Status = AppointmentStatus.Pending
@@ -85,34 +132,9 @@ namespace FitnessCenter.Web.Controllers
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("MyAppointments");
+            return RedirectToAction(nameof(MyAppointments));
         }
 
-        // -----------------------------
-        // ANTRENÖRDEN RANDEVU AL
-        // -----------------------------
-        public async Task<IActionResult> CreateByTrainer(int trainerId)
-        {
-            var trainer = await _context.Trainers
-                .Include(t => t.Service)
-                .FirstOrDefaultAsync(t => t.Id == trainerId);
-
-            var vm = new AppointmentCreateViewModel
-            {
-                TrainerId = trainerId,
-                TrainerName = $"{trainer.FirstName} {trainer.LastName}",
-                ServiceId = trainer.ServiceId,
-                ServiceName = trainer.Service.Name,
-                Price = trainer.Service.Price,
-                Duration = trainer.Service.Duration,
-            };
-
-            return View("Create", vm);
-        }
-
-        // -----------------------------
-        // RANDEVULARIM
-        // -----------------------------
         public async Task<IActionResult> MyAppointments()
         {
             var userId = _userManager.GetUserId(User);
@@ -128,3 +150,5 @@ namespace FitnessCenter.Web.Controllers
         }
     }
 }
+
+

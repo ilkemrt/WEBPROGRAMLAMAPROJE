@@ -21,8 +21,8 @@ namespace FitnessCenter.Web.Controllers
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
 
-            var services = await _context.Services.ToListAsync();
-            return View(services);
+            
+            return View();
         }
     }
 }

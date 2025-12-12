@@ -212,6 +212,33 @@ namespace FitnessCenter.Web.Migrations
                     b.ToTable("Trainers");
                 });
 
+            modelBuilder.Entity("FitnessCenter.Web.Models.TrainerWorkingHour", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TrainerId");
+
+                    b.ToTable("TrainerWorkingHours");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -350,19 +377,19 @@ namespace FitnessCenter.Web.Migrations
                     b.HasOne("FitnessCenter.Web.Models.ApplicationUser", "Member")
                         .WithMany()
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FitnessCenter.Web.Models.Service", "Service")
                         .WithMany("Appointments")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FitnessCenter.Web.Models.Trainer", "Trainer")
                         .WithMany("Appointments")
                         .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Member");
@@ -381,6 +408,17 @@ namespace FitnessCenter.Web.Migrations
                         .IsRequired();
 
                     b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("FitnessCenter.Web.Models.TrainerWorkingHour", b =>
+                {
+                    b.HasOne("FitnessCenter.Web.Models.Trainer", "Trainer")
+                        .WithMany("WorkingHours")
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Trainer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -444,6 +482,8 @@ namespace FitnessCenter.Web.Migrations
             modelBuilder.Entity("FitnessCenter.Web.Models.Trainer", b =>
                 {
                     b.Navigation("Appointments");
+
+                    b.Navigation("WorkingHours");
                 });
 #pragma warning restore 612, 618
         }

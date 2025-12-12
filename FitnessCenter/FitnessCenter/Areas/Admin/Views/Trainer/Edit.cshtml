@@ -1,26 +1,101 @@
-﻿@using FitnessCenter.Web.Models
-@model Trainer
+﻿@model FitnessCenter.Web.Models.ViewModels.TrainerCreateViewModel
 
-<h2>Antrenör Düzenle</h2>
+@{
+    ViewData["Title"] = "Antrenör Düzenle";
+}
+
+<h2 class="mb-4">Antrenör Düzenle</h2>
 
 <form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
 
-    <input type="hidden" asp-for="Id" />
+    <!-- AD -->
+    <div class="mb-3">
+        <label class="form-label">Ad</label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
 
-    <label>Ad</label>
-    <input asp-for="FirstName" class="form-control" />
+    <!-- SOYAD -->
+    <div class="mb-3">
+        <label class="form-label">Soyad</label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
 
-    <label>Soyad</label>
-    <input asp-for="LastName" class="form-control" />
+    <!-- BİYOGRAFİ -->
+    <div class="mb-3">
+        <label class="form-label">Biyografi</label>
+        <textarea asp-for="Biography" class="form-control" rows="4"></textarea>
+    </div>
 
-    <label>Biyografi</label>
-    <textarea asp-for="Biography" class="form-control"></textarea>
+    <!-- FOTO -->
+    <div class="mb-3">
+        <label class="form-label">Fotoğraf URL</label>
+        <input asp-for="ImageUrl" class="form-control" />
+    </div>
 
-    <label>Hizmet</label>
-    <select asp-for="ServiceId" asp-items="ViewBag.Services" class="form-control"></select>
+    <!-- HİZMET -->
+    <div class="mb-3">
+        <label class="form-label">Hizmet</label>
+        <select asp-for="ServiceId" asp-items="ViewBag.Services" class="form-select"></select>
+        <span asp-validation-for="ServiceId" class="text-danger"></span>
+    </div>
 
-    <label>Resim URL</label>
-    <input asp-for="ImageUrl" class="form-control" />
+    <hr />
 
-    <button class="btn btn-warning mt-3">Güncelle</button>
+    <!-- ÇALIŞMA GÜNLERİ -->
+    <div class="mb-3">
+        <label class="form-label fw-bold">Çalışma Günleri</label>
+
+        <div class="row">
+            @foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+            {
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               value="@day"
+                               name="WorkingDays"
+                               @(Model.WorkingDays.Contains(day) ? "checked" : "") />
+                        <label class="form-check-label">
+                            @day
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <span asp-validation-for="WorkingDays" class="text-danger"></span>
+    </div>
+
+    <!-- ÇALIŞMA SAATLERİ -->
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Başlangıç Saati</label>
+            <input asp-for="StartTime" type="time" class="form-control" />
+            <span asp-validation-for="StartTime" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Bitiş Saati</label>
+            <input asp-for="EndTime" type="time" class="form-control" />
+            <span asp-validation-for="EndTime" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- BUTONLAR -->
+    <div class="mt-4">
+        <button type="submit" class="btn btn-success">
+            Güncelle
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary ms-2">
+            Vazgeç
+        </a>
+    </div>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

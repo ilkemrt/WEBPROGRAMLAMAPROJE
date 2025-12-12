@@ -1,68 +1,110 @@
-﻿@model IEnumerable<Service>
-
-@{
-    ViewData["Title"] = "Fitness Center";
-}
-
-<!-- ======= HERO SECTION ======= -->
-<section class="hero-section" style="
-    height: 70vh;
+﻿<section class="hero-section d-flex align-items-center" style="
+    height: 85vh;
     background-image: url('https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg');
     background-size: cover;
     background-position: center;
     position: relative;">
 
-    <div style="
-        background-color: rgba(0,0,0,0.5);
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;">
+    <div class="w-100 h-100 d-flex align-items-center justify-content-center"
+         style="background-color: rgba(0,0,0,0.65);">
+        <div class="text-center text-white px-3">
+            <h1 class="display-2 fw-bold mb-3">
+                Güç, Disiplin, Değişim
+            </h1>
+            <p class="fs-3 mb-4">
+                Vücudunu değil, hayatını şekillendir
+            </p>
 
-        <div class="text-center text-white">
-            <h1 class="display-3 fw-bold">Fitness Center'a Hoş Geldiniz</h1>
-            <p class="fs-4">Profesyonel eğitmenlerimizle sağlıklı bir yaşama adım atın</p>
-            <a href="#services" class="btn btn-primary btn-lg mt-3">Hizmetleri Keşfet</a>
+            <p class="fs-5 text-light mb-4">
+                Profesyonel eğitmenler • Kişiye özel programlar • Online randevu
+            </p>
+
+            <a asp-controller="Service" asp-action="Index"
+               class="btn btn-outline-light btn-lg px-5 py-3">
+                Hizmetleri İncele
+            </a>
         </div>
-
     </div>
 </section>
+<section class="container my-5 py-5 text-center">
+    <h2 class="mb-4 fw-bold">Motivasyonun Burada Başlıyor</h2>
 
-<!-- ======= HİZMETLER ======= -->
-<section id="services" class="container mt-5">
-    <h2 class="text-center mb-4">Hizmetlerimiz</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <blockquote class="fs-3 fst-italic text-muted">
+                “Başlamak için mükemmel olman gerekmez,
+                ama mükemmel olmak için başlaman gerekir.”
+            </blockquote>
 
-    <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-lg">
-                    @if (!string.IsNullOrEmpty(item.ImageUrl))
-                    {
-                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 220px; object-fit: cover;" />
-                    }
-                    <div class="card-body">
-                        <h4>@item.Name</h4>
-                        <p>@item.Description</p>
-                        <p><strong>Süre:</strong> @item.Duration dk</p>
-                        <p><strong>Fiyat:</strong> @item.Price ₺</p>
+            <p class="mt-3 text-secondary">— Anonymous</p>
+        </div>
+    </div>
+</section>
+<section class="bg-dark text-white py-5">
+    <div class="container">
+        <h2 class="text-center mb-5 fw-bold">Neler Sunuyoruz?</h2>
 
-                        <!-- EĞİTİM AL BUTONU -->
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <a asp-controller="Appointment" asp-action="Create" asp-route-serviceId="@item.Id"
-                               class="btn btn-success">Eğitim Al</a>
-                        }
-                        else
-                        {
-                            <a asp-controller="Account" asp-action="Login" class="btn btn-primary">
-                                Eğitime Başla
-                            </a>
-                        }
-                    </div>
+        <div class="row text-center g-4">
+            <div class="col-md-4">
+                <div class="p-4 border border-secondary rounded h-100">
+                    <h3 class="mb-3">🏋️ Profesyonel Eğitmenler</h3>
+                    <p class="fs-5">
+                        Alanında uzman, sertifikalı ve deneyimli eğitmen kadrosu
+                    </p>
                 </div>
             </div>
-        }
+
+            <div class="col-md-4">
+                <div class="p-4 border border-secondary rounded h-100">
+                    <h3 class="mb-3">📅 Online Randevu</h3>
+                    <p class="fs-5">
+                        Uygun saatini seç, saniyeler içinde randevu al
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="p-4 border border-secondary rounded h-100">
+                    <h3 class="mb-3">🤖 Akıllı Sistem</h3>
+                    <p class="fs-5">
+                        Sana uygun hizmet ve eğitmen önerileri
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
+</section>
+<section class="container my-5 py-5">
+    <h2 class="text-center fw-bold mb-5">Nasıl Çalışır?</h2>
+
+    <div class="row text-center">
+        <div class="col-md-4">
+            <h1 class="display-4 fw-bold text-primary">1</h1>
+            <h4>Üye Ol</h4>
+            <p>Hızlı ve ücretsiz kayıt</p>
+        </div>
+
+        <div class="col-md-4">
+            <h1 class="display-4 fw-bold text-primary">2</h1>
+            <h4>Hizmet & Eğitmen Seç</h4>
+            <p>Sana en uygun branşı bul</p>
+        </div>
+
+        <div class="col-md-4">
+            <h1 class="display-4 fw-bold text-primary">3</h1>
+            <h4>Randevu Al</h4>
+            <p>Antrenmana başla</p>
+        </div>
+    </div>
+</section>
+<section class="text-center py-5 bg-light">
+    <h2 class="fw-bold mb-3">Değişime Bugün Başla</h2>
+    <p class="fs-5 mb-4">
+        Sağlıklı yaşam bir karar meselesi
+    </p>
+
+    <a asp-controller="Account" asp-action="Register"
+       class="btn btn-success btn-lg px-5 py-3">
+        Üye Ol
+    </a>
 </section>

@@ -28,7 +28,7 @@ namespace FitnessCenter.Web.Models
 
         [Range(1, 300)]
         public int Duration { get; set; }
-
+        [Required]
         [Range(0, 10000)]
         public decimal Price { get; set; }
 

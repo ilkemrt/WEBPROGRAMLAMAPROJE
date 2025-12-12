@@ -8360,9 +8360,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\İLKE\\Desktop\\FitnessCenter\\FitnessCenter\\FitnessCenter.web.csproj",
-      "projectName": "FitnessCenter.web",
-      "projectPath": "C:\\Users\\İLKE\\Desktop\\FitnessCenter\\FitnessCenter\\FitnessCenter.web.csproj",
+      "projectUniqueName": "C:\\Users\\İLKE\\Desktop\\FitnessCenter\\FitnessCenter\\FitnessCenter.Web.csproj",
+      "projectName": "FitnessCenter.Web",
+      "projectPath": "C:\\Users\\İLKE\\Desktop\\FitnessCenter\\FitnessCenter\\FitnessCenter.Web.csproj",
       "packagesPath": "C:\\Users\\İLKE\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\İLKE\\Desktop\\FitnessCenter\\FitnessCenter\\obj\\",
       "projectStyle": "PackageReference",

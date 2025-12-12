@@ -1,24 +1,64 @@
-﻿@using FitnessCenter.Web.Models
-@model Trainer
+﻿@model FitnessCenter.Web.Models.ViewModels.TrainerCreateViewModel
 
 <h2>Yeni Antrenör Ekle</h2>
 
 <form asp-action="Create" method="post">
 
-    <label>Ad</label>
-    <input asp-for="FirstName" class="form-control" />
+    <div class="mb-3">
+        <label>Ad</label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
 
-    <label>Soyad</label>
-    <input asp-for="LastName" class="form-control" />
+    <div class="mb-3">
+        <label>Soyad</label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
 
-    <label>Biyografi</label>
-    <textarea asp-for="Biography" class="form-control"></textarea>
+    <div class="mb-3">
+        <label>Biyografi</label>
+        <textarea asp-for="Biography" class="form-control"></textarea>
+    </div>
 
-    <label>Hizmet</label>
-    <select asp-for="ServiceId" asp-items="ViewBag.Services" class="form-control"></select>
+    <div class="mb-3">
+        <label>Hizmet</label>
+        <select asp-for="ServiceId" asp-items="ViewBag.Services" class="form-select"></select>
+    </div>
 
-    <label>Resim URL</label>
-    <input asp-for="ImageUrl" class="form-control" />
+    <div class="mb-3">
+        <label>Resim URL</label>
+        <input asp-for="ImageUrl" class="form-control" />
+    </div>
 
-    <button class="btn btn-success mt-3">Kaydet</button>
+    <hr />
+
+    <h5>Çalışma Günleri</h5>
+
+    @foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+    {
+        <div class="form-check">
+            <input class="form-check-input"
+                   type="checkbox"
+                   name="WorkingDays"
+                   value="@day"
+                   id="day_@day" />
+
+            <label class="form-check-label" for="day_@day">
+                @day
+            </label>
+        </div>
+    }
+
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <label>Başlangıç Saati</label>
+            <input asp-for="StartTime" type="time" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label>Bitiş Saati</label>
+            <input asp-for="EndTime" type="time" class="form-control" />
+        </div>
+    </div>
+
+    <button class="btn btn-success mt-4">Kaydet</button>
 </form>

@@ -1,5 +1,6 @@
 ﻿using FitnessCenter.Web.Data;
 using FitnessCenter.Web.Models;
+using FitnessCenter.Web.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

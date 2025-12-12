@@ -1,9 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace FitnessCenter.Web.Models
 {
     public class Service
     {
+
+        public Service()
+        {
+            Trainers = new List<Trainer>();
+            Appointments = new List<Appointment>();
+           
+        }   
+
         public int Id { get; set; }
 
         [Required]
@@ -22,7 +33,13 @@ namespace FitnessCenter.Web.Models
         public string ImageUrl { get; set; }
 
         // Navigation
+
+        [ValidateNever]
         public ICollection<Trainer> Trainers { get; set; }
+
+        [ValidateNever]
         public ICollection<Appointment> Appointments { get; set; }
+
+
     }
 }
