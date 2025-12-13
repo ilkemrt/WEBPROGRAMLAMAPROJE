@@ -4,6 +4,7 @@
     ViewData["Title"] = "Randevu Al";
 }
 
+
 <h2 class="mb-4">Randevu Al</h2>
 
 <div class="card shadow p-4">
@@ -43,16 +44,11 @@
 
         <!-- SAAT -->
         <div class="mb-3">
-            <label class="form-label">Saat</label>
-            <select asp-for="StartHour" class="form-select">
-                <option value="">-- Saat Seçiniz --</option>
-                @foreach (var hour in Model.AvailableHours)
-                {
-                    <option value="@hour">@hour.ToString(@"hh\:mm")</option>
-                }
-            </select>
-            <span asp-validation-for="StartHour" class="text-danger"></span>
+            <label class="form-label">Müsait Saatler</label>
+            <div id="hoursContainer" class="d-flex flex-wrap gap-2"></div>
         </div>
+
+        <input type="hidden" asp-for="StartHour" id="startHourInput" />
 
         <button type="submit" class="btn btn-success mt-3">
             Randevu Oluştur
@@ -60,4 +56,47 @@
     </form>
 </div>
 
+@section Scripts {
+    <script>
+        const trainer = document.getElementById("TrainerId");
+        const date = document.getElementById("Date");
+        const hoursDiv = document.getElementById("hoursContainer");
+        const hiddenHour = document.getElementById("startHourInput");
+
+        trainer.addEventListener("change", loadHours);
+        date.addEventListener("change", loadHours);
+
+        function loadHours() {
+
+            if (!trainer.value || !date.value) return;
+
+            fetch(`/Appointment/GetAvailableHours?trainerId=${trainer.value}&date=${date.value}`)
+                .then(r => r.json())
+                .then(hours => {
+                    hoursDiv.innerHTML = "";
+
+                    if (hours.length === 0) {
+                        hoursDiv.innerHTML = "<span class='text-danger'>Müsait saat yok</span>";
+                        return;
+                    }
+
+                    hours.forEach(h => {
+                        const btn = document.createElement("button");
+                        btn.type = "button";
+                        btn.className = "btn btn-outline-success";
+                        btn.innerText = h;
+
+                        btn.onclick = () => {
+                            document.querySelectorAll("#hoursContainer button")
+                                .forEach(x => x.classList.remove("active"));
+                            btn.classList.add("active");
+                            hiddenHour.value = h;
+                        };
+
+                        hoursDiv.appendChild(btn);
+                    });
+                });
+        }
+    </script>
+}
 

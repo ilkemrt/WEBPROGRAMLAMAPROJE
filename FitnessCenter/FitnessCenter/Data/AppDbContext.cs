@@ -45,7 +45,7 @@ namespace FitnessCenter.Web.Data
                 .HasOne(a => a.Trainer)
                 .WithMany(t => t.Appointments)
                 .HasForeignKey(a => a.TrainerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // -------------------------
             // Appointment -> Member (N:1)

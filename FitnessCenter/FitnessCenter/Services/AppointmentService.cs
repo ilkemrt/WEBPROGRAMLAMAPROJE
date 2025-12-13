@@ -52,27 +52,52 @@ namespace FitnessCenter.Web.Services
         }
 
         // UI için uygun saatleri üret (her saat başı) — basit ve sağlam
-        public async Task<List<TimeSpan>> GetAvailableHours(int trainerId, DateTime date, int durationMinutes)
+        public async Task<List<TimeSpan>> GetAvailableHours(
+        int trainerId,
+        DateTime date,
+        int serviceDurationMinutes)
         {
-            var wh = await GetWorkingHour(trainerId, date);
-            if (wh == null) return new List<TimeSpan>();
+            var result = new List<TimeSpan>();
 
-            var results = new List<TimeSpan>();
+            // geçmiş gün engeli
+            if (date.Date < DateTime.Today)
+                return result;
 
-            // saat başı slot (08:00, 09:00, ...)
-            var cursor = wh.StartTime;
-            while (cursor.AddMinutes(durationMinutes) <= wh.EndTime)
+            var workingHour = await GetWorkingHour(trainerId, date);
+            if (workingHour == null)
+                return result;
+
+            // sabit blok: 1 saat
+            var slotStep = TimeSpan.FromHours(1);
+
+            var cursor = workingHour.StartTime;
+
+            while (true)
             {
-                var candidateStart = date.Date + cursor.ToTimeSpan();
-                var ok = await IsTrainerAvailable(trainerId, candidateStart, durationMinutes);
+                var start = date.Date + cursor.ToTimeSpan();
+                var end = start.AddMinutes(serviceDurationMinutes);
 
-                if (ok)
-                    results.Add(cursor.ToTimeSpan());
+                // çalışma saatini aşıyor mu?
+                if (end.TimeOfDay > workingHour.EndTime.ToTimeSpan())
+                    break;
 
-                cursor = cursor.AddHours(1);
+                // bugünkü geçmiş saat engeli
+                if (date.Date == DateTime.Today && start <= DateTime.Now)
+                {
+                    cursor = cursor.AddHours(1);
+                    continue;
+                }
+
+                // çakışma var mı?
+                var conflict = await HasConflict(trainerId, start, serviceDurationMinutes);
+                if (!conflict)
+                    result.Add(cursor.ToTimeSpan());
+
+                cursor = cursor.Add(slotStep);
             }
 
-            return results;
+            return result;
         }
+
     }
 }

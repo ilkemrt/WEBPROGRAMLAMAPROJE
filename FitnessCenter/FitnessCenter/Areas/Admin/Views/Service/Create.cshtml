@@ -1,78 +1,39 @@
-﻿@model FitnessCenter.Web.Models.ViewModels.AppointmentCreateViewModel
-
-@{
-    ViewData["Title"] = "Randevu Al";
-}
+﻿@model FitnessCenter.Web.Models.Service
 
 
-<h2 class="mb-4">Randevu Al</h2>
+<h2>Yeni Hizmet Ekle</h2>
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
 
-<div class="card shadow p-4">
-
-    <div class="alert alert-info mb-4">
-        <h5 class="mb-1">@Model.ServiceName</h5>
-        <div>
-            <strong>Süre:</strong> @Model.Duration dk |
-            <strong>Ücret:</strong> @Model.Price ₺
-        </div>
-    </div>
-
-    <form asp-action="Create" method="post">
+<div class="card p-4 shadow">
+    <form asp-area="Admin" asp-controller="Service" asp-action="Create" method="post">
         @Html.AntiForgeryToken()
 
-        <input type="hidden" asp-for="ServiceId" />
-
         <div class="mb-3">
-            <label class="form-label">Antrenör</label>
-            <select asp-for="TrainerId" class="form-select">
-                <option value="">-- Antrenör Seçiniz --</option>
-                @foreach (var t in Model.AvailableTrainers)
-                {
-                    <option value="@t.Id">@t.FullName</option>
-                }
-            </select>
-            <span asp-validation-for="TrainerId" class="text-danger"></span>
+            <label class="form-label">Hizmet Adı</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Tarih</label>
-            <input asp-for="Date" type="date" class="form-control" />
-            <span asp-validation-for="Date" class="text-danger"></span>
+            <label class="form-label">Açıklama</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Saat</label>
-            <select asp-for="StartHour" class="form-select">
-                <option value="">-- Saat Seçiniz --</option>
-                @foreach (var hour in Model.AvailableHours)
-                {
-                    <option value="@hour">@hour.ToString(@"hh\:mm")</option>
-                }
-            </select>
-            <span asp-validation-for="StartHour" class="text-danger"></span>
+            <label class="form-label">Süre (dk)</label>
+            <input asp-for="Duration" type="number" class="form-control" />
         </div>
 
-        <button type="submit" class="btn btn-success mt-3">
-            Randevu Oluştur
-        </button>
+        <div class="mb-3">
+            <label class="form-label">Fiyat</label>
+            <input asp-for="Price" type="number" class="form-control" />
+        </div>
 
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <div class="alert alert-danger mt-3">
-                @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    <div>@err.ErrorMessage</div>
-                }
-            </div>
-        }
+        <div class="mb-3">
+            <label class="form-label">Resim URL</label>
+            <input asp-for="ImageUrl" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">Kaydet</button>
     </form>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

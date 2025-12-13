@@ -135,6 +135,15 @@ namespace FitnessCenter.Web.Controllers
             return RedirectToAction(nameof(MyAppointments));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAvailableHours(int trainerId, DateTime date)
+        {
+            var hours = await _appointmentService.GetAvailableHours(trainerId, date, 120);
+            return Json(hours.Select(h => h.ToString(@"hh\:mm")));
+        }
+
+
+
         public async Task<IActionResult> MyAppointments()
         {
             var userId = _userManager.GetUserId(User);
