@@ -56,47 +56,49 @@
     </form>
 </div>
 
-@section Scripts {
-    <script>
-        const trainer = document.getElementById("TrainerId");
-        const date = document.getElementById("Date");
-        const hoursDiv = document.getElementById("hoursContainer");
-        const hiddenHour = document.getElementById("startHourInput");
+<script>
+    const trainer = document.getElementById("TrainerId");
+    const date = document.getElementById("Date");
+    const serviceInput = document.getElementById("ServiceId"); // Hidden input'u yakala (ASP-FOR ServiceId id'si genelde ServiceId olur)
+    const hoursDiv = document.getElementById("hoursContainer");
+    const hiddenHour = document.getElementById("startHourInput");
 
-        trainer.addEventListener("change", loadHours);
-        date.addEventListener("change", loadHours);
+    trainer.addEventListener("change", loadHours);
+    date.addEventListener("change", loadHours);
 
-        function loadHours() {
+    function loadHours() {
+        // serviceInput.value kontrolünü de ekleyelim
+        if (!trainer.value || !date.value || !serviceInput.value) return;
 
-            if (!trainer.value || !date.value) return;
+        // URL'e serviceId parametresini de ekliyoruz
+        const url = `/Appointment/GetAvailableHours?trainerId=${trainer.value}&serviceId=${serviceInput.value}&date=${date.value}`;
 
-            fetch(`/Appointment/GetAvailableHours?trainerId=${trainer.value}&date=${date.value}`)
-                .then(r => r.json())
-                .then(hours => {
-                    hoursDiv.innerHTML = "";
+        fetch(url)
+            .then(r => r.json())
+            .then(hours => {
+                hoursDiv.innerHTML = "";
 
-                    if (hours.length === 0) {
-                        hoursDiv.innerHTML = "<span class='text-danger'>Müsait saat yok</span>";
-                        return;
-                    }
+                if (hours.length === 0) {
+                    hoursDiv.innerHTML = "<span class='text-danger'>Müsait saat yok</span>";
+                    return;
+                }
 
-                    hours.forEach(h => {
-                        const btn = document.createElement("button");
-                        btn.type = "button";
-                        btn.className = "btn btn-outline-success";
-                        btn.innerText = h;
+                hours.forEach(h => {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "btn btn-outline-success";
+                    btn.innerText = h;
 
-                        btn.onclick = () => {
-                            document.querySelectorAll("#hoursContainer button")
-                                .forEach(x => x.classList.remove("active"));
-                            btn.classList.add("active");
-                            hiddenHour.value = h;
-                        };
+                    btn.onclick = () => {
+                        document.querySelectorAll("#hoursContainer button")
+                            .forEach(x => x.classList.remove("active"));
+                        btn.classList.add("active");
+                        hiddenHour.value = h;
+                    };
 
-                        hoursDiv.appendChild(btn);
-                    });
+                    hoursDiv.appendChild(btn);
                 });
-        }
-    </script>
-}
+            });
+    }
+</script>
 
