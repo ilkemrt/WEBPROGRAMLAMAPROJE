@@ -1,1 +1,28 @@
-[]
+[
+  {
+    "ContainingType": "FitnessCenter.Web.Controllers.Api.AppointmentsApiController",
+    "Method": "GetMemberAppointments",
+    "RelativePath": "api/AppointmentsApi/member/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FitnessCenter.Web.Controllers.Api.TrainersApiController",
+    "Method": "GetAll",
+    "RelativePath": "api/TrainersApi",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

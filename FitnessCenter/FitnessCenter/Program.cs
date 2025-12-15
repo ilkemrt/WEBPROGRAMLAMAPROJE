@@ -1,6 +1,7 @@
 ﻿using FitnessCenter.Web.Data;
 using FitnessCenter.Web.Models;
 using FitnessCenter.Web.Services;
+using FitnessCenter.Web.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +25,14 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 builder.Services.AddScoped<AppointmentService>();
 
+
+builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<GoogleAiOptions>(builder.Configuration.GetSection("GoogleAI"));
+
+builder.Services.AddHttpClient<GoogleAiService>();
+builder.Services.AddScoped<GoogleAiService>();
 
 var app = builder.Build();
 
@@ -41,6 +49,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
 
 // ✔️ DOĞRU AREA ROUTE
 app.MapControllerRoute(
