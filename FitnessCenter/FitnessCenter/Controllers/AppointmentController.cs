@@ -149,6 +149,46 @@ namespace FitnessCenter.Web.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> CreateByTrainer(int trainerId)
+        {
+            var trainer = await _context.Trainers
+                .Include(t => t.Service)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Id == trainerId);
+
+            if (trainer == null)
+                return NotFound();
+
+            var vm = new AppointmentCreateViewModel
+            {
+                TrainerId = trainer.Id,
+                ServiceId = trainer.ServiceId,
+                ServiceName = trainer.Service.Name,
+                Duration = trainer.Service.Duration,
+                Price = trainer.Service.Price,
+                Date = DateTime.Today,
+
+                AvailableTrainers = new List<TrainerSelectItem>
+        {
+            new TrainerSelectItem
+            {
+                Id = trainer.Id,
+                FullName = trainer.FirstName + " " + trainer.LastName
+            }
+        }
+            };
+
+            vm.AvailableHours = await _appointmentService
+                .GetAvailableHours(trainer.Id, vm.Date, vm.Duration);
+
+            return View("Create", vm); // mevcut Create.cshtml
+        }
+
+
+
+
+
 
         public async Task<IActionResult> MyAppointments()
         {
