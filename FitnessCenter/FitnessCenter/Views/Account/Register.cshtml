@@ -1,12 +1,60 @@
 ﻿@using FitnessCenter.Web.Models
 @model RegisterViewModel
 
-<h2>Kayıt Ol</h2>
+<div class="d-flex align-items-center justify-content-center" style="min-height: 85vh;">
+    <div class="card shadow-lg border-0" style="width: 500px;">
+        <div class="card-body p-5">
 
-<form asp-action="Register" method="post">
-    <input asp-for="FirstName" placeholder="Ad" class="form-control" />
-    <input asp-for="LastName" placeholder="Soyad" class="form-control" />
-    <input asp-for="Email" placeholder="Email" class="form-control" />
-    <input asp-for="Password" placeholder="Şifre" type="password" class="form-control" />
-    <button class="btn btn-primary mt-3">Kayıt Ol</button>
-</form>
+            <h2 class="text-center fw-bold mb-4">Üye Ol</h2>
+
+            <form asp-action="Register" method="post">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Ad</label>
+                        <input asp-for="FirstName"
+                               class="form-control form-control-lg"
+                               placeholder="Ad" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Soyad</label>
+                        <input asp-for="LastName"
+                               class="form-control form-control-lg"
+                               placeholder="Soyad" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input asp-for="Email"
+                           class="form-control form-control-lg"
+                           placeholder="ornek@mail.com" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Şifre</label>
+                    <input asp-for="Password"
+                           type="password"
+                           class="form-control form-control-lg"
+                           placeholder="Güçlü bir şifre gir" />
+                </div>
+
+                <button type="submit"
+                        class="btn btn-primary btn-lg w-100 mt-3">
+                    Üye Ol
+                </button>
+            </form>
+
+            <hr class="my-4" />
+
+            <p class="text-center mb-0">
+                Zaten üye misin?
+                <a asp-action="Login" class="fw-bold text-decoration-none">
+                    Giriş Yap
+                </a>
+            </p>
+
+        </div>
+    </div>
+</div>

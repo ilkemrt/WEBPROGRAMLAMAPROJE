@@ -271,7 +271,6 @@ C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\rjsmcshtml.d
 C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\scopedcss\bundle\FitnessCenter.Web.styles.css
 C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\scopedcss\projectbundle\FitnessCenter.Web.bundle.scp.css
-C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\compressed\5f1z2bdb94-zi4qljpsu0.gz
 C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\compressed\b645uwmosx-61n19gt1b8.gz
 C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\compressed\hkc23lf08s-xtxxf3hu2r.gz
 C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\compressed\phan24huii-bqjiyaj88i.gz
@@ -346,3 +345,4 @@ C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\refint\Fitne
 C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\FitnessCenter.Web.pdb
 C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\FitnessCenter.Web.genruntimeconfig.cache
 C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\ref\FitnessCenter.Web.dll
+C:\Users\İLKE\Desktop\FitnessCenter\FitnessCenter\obj\Debug\net9.0\compressed\5f1z2bdb94-z1akgw8ddl.gz

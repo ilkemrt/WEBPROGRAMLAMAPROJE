@@ -1,45 +1,85 @@
 ﻿@model IEnumerable<Service>
 
-<h2 class="text-center mb-4">Hizmetlerimiz</h2>
+<section class="container my-5">
 
-<div class="row">
-    @foreach (var service in Model)
-    {
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-lg">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold display-5">Hizmetlerimiz</h1>
+        <p class="text-muted fs-5">
+            Sana en uygun branşı seç, dönüşümünü başlat
+        </p>
+    </div>
 
-                @if (!string.IsNullOrEmpty(service.ImageUrl))
-                {
-                    <img src="@service.ImageUrl" class="card-img-top" style="height: 220px; object-fit: cover;" />
-                }
+    <div class="row g-4">
+        @foreach (var service in Model)
+        {
+            <div class="col-md-4">
+                <div class="service-card position-relative overflow-hidden rounded shadow-lg">
 
-                <div class="card-body">
-                    <h3>@service.Name</h3>
-                    <p>@service.Description</p>
+                    <img src="@service.ImageUrl"
+                         class="w-100 h-100"
+                         style="height: 320px; object-fit: cover;" />
 
-                    <p>
-                        <b>Süre:</b> @service.Duration dk<br />
-                        <b>Fiyat:</b> @service.Price ₺
-                    </p>
+                    <!-- Overlay -->
+                    <div class="service-overlay d-flex flex-column justify-content-end p-4">
+                        <h3 class="fw-bold text-white">@service.Name</h3>
 
-                    <a asp-action="Details" asp-route-id="@service.Id" class="btn btn-outline-primary">
-                        Detay
-                    </a>
+                        <p class="text-light small mb-2">
+                            @service.Description
+                        </p>
 
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <a asp-controller="Appointment" asp-action="Create" asp-route-serviceId="@service.Id"
-                           class="btn btn-success">Eğitim Al</a>
-                    }
-                    else
-                    {
-                        <a asp-controller="Account" asp-action="Login" class="btn btn-primary">
-                            Eğitime Başla
-                        </a>
-                    }
+                        <p class="text-white mb-3">
+                            ⏱ @service.Duration dk &nbsp; | &nbsp; 💰 @service.Price ₺
+                        </p>
+
+                        <div class="d-flex gap-2">
+                            <a asp-action="Details"
+                               asp-route-id="@service.Id"
+                               class="btn btn-outline-light btn-sm">
+                                Detay
+                            </a>
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a asp-controller="Appointment"
+                                   asp-action="Create"
+                                   asp-route-serviceId="@service.Id"
+                                   class="btn btn-success btn-sm">
+                                    Eğitim Al
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Account"
+                                   asp-action="Login"
+                                   class="btn btn-primary btn-sm">
+                                    Başla
+                                </a>
+                            }
+                        </div>
+                    </div>
+
                 </div>
-
             </div>
-        </div>
+        }
+    </div>
+
+</section>
+
+<style>
+    .service-card {
+        height: 320px;
+        cursor: pointer;
     }
-</div>
+
+    .service-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.15));
+        opacity: 0;
+        transition: .3s;
+    }
+
+    .service-card:hover .service-overlay {
+        opacity: 1;
+    }
+</style>

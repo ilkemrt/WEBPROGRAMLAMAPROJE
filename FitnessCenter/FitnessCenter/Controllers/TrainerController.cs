@@ -28,6 +28,7 @@ namespace FitnessCenter.Web.Controllers
         {
             var trainer = await _context.Trainers
                 .Include(t => t.Service)
+                .Include(t => t.WorkingHours)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             if (trainer == null)

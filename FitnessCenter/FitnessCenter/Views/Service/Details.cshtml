@@ -1,39 +1,137 @@
 ﻿@model Service
 
+<section class="container my-5">
 
+    <div class="row align-items-center">
 
-<div class="container mt-4">
-    <div class="row">
-
-        <div class="col-md-6">
-            <img src="@Model.ImageUrl" class="img-fluid rounded" style="object-fit: cover; height: 350px;" />
+        <!-- GÖRSEL -->
+        <div class="col-md-6 mb-4 mb-md-0">
+            <img src="@Model.ImageUrl"
+                 class="img-fluid rounded shadow-lg"
+                 style="height: 420px; object-fit: cover;" />
         </div>
 
+        <!-- BİLGİ -->
         <div class="col-md-6">
-            <h2>@Model.Name</h2>
-            <p>@Model.Description</p>
 
-            <p>
-                <b>Süre:</b> @Model.Duration dk <br />
-                <b>Fiyat:</b> @Model.Price ₺
+            <h1 class="fw-bold display-6 mb-3">
+                @Model.Name
+            </h1>
+
+            <p class="fs-5 text-muted">
+                @Model.Description
             </p>
+
+            <div class="bg-dark bg-opacity-75 p-4 rounded text-white my-4">
+                <p class="mb-2 fs-5">
+                    ⏱ <strong>Süre:</strong> @Model.Duration dk
+                </p>
+                <p class="mb-0 fs-5">
+                    💰 <strong>Fiyat:</strong> @Model.Price ₺
+                </p>
+            </div>
 
             @if (User.Identity.IsAuthenticated)
             {
                 <a asp-controller="Appointment"
                    asp-action="Create"
                    asp-route-serviceId="@Model.Id"
-                   class="btn btn-success">
+                   class="btn btn-success btn-lg px-5">
                     Randevu Al
                 </a>
             }
             else
             {
-                <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg">
-                    Giriş Yap & Randevu Al
+                <a asp-controller="Account"
+                   asp-action="Login"
+                   class="btn btn-primary btn-lg px-5">
+                    Giriş Yap & Başla
                 </a>
             }
+
         </div>
 
+
+        @if (Model.Trainers != null && Model.Trainers.Any())
+        {
+            <section class="container my-5">
+                <h2 class="fw-bold text-center mb-4">
+                    Bu Hizmetteki Antrenörler
+                </h2>
+
+                <div id="trainerCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+
+                        @{
+                            var trainers = Model.Trainers.ToList();
+                        }
+
+                        @for (int i = 0; i < trainers.Count; i += 3)
+                        {
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <div class="row justify-content-center g-4">
+
+                                    @foreach (var t in trainers.Skip(i).Take(3))
+                                    {
+                                        <div class="col-md-4">
+                                            <div class="card shadow h-100">
+
+                                                <img src="@t.ImageUrl"
+                                                     class="card-img-top"
+                                                     style="height: 220px; object-fit: cover;" />
+
+                                                <div class="card-body text-center">
+                                                    <h5 class="fw-bold">
+                                                        @t.FirstName @t.LastName
+                                                    </h5>
+
+                                                    <p class="text-muted small">
+                                                        @t.Biography?.Substring(0, Math.Min(80, t.Biography.Length))...
+                                                    </p>
+
+                                                    <a asp-controller="Trainer"
+                                                       asp-action="Details"
+                                                       asp-route-id="@t.Id"
+                                                       class="btn btn-outline-primary btn-sm">
+                                                        Profili Gör
+                                                    </a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- CONTROLS -->
+                    <button class="carousel-control-prev" type="button"
+                            data-bs-target="#trainerCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+
+                    <button class="carousel-control-next" type="button"
+                            data-bs-target="#trainerCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            </section>
+        }
+
+
+
+
+
+
+
+
+
     </div>
-</div>
+
+
+
+
+
+</section>

@@ -23,7 +23,9 @@ namespace FitnessCenter.Web.Controllers
         // Hizmet Detayı
         public async Task<IActionResult> Details(int id)
         {
-            var service = await _context.Services.FindAsync(id);
+            var service = await _context.Services
+            .Include(s => s.Trainers)
+        .FirstOrDefaultAsync(s => s.Id == id);
             if (service == null)
                 return NotFound();
 

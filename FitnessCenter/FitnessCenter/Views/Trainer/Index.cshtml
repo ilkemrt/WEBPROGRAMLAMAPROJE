@@ -1,53 +1,57 @@
 ﻿@model IEnumerable<Trainer>
 
-<h2 class="text-center mb-4">Antrenörlerimiz</h2>
+<h2 class="text-center fw-bold mb-5">Profesyonel Antrenörlerimiz</h2>
 
-<div class="row">
+<div class="row g-4">
     @foreach (var t in Model)
     {
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-lg">
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="trainer-card">
 
-                @if (!string.IsNullOrEmpty(t.ImageUrl))
-                {
-                    <img src="@t.ImageUrl" class="card-img-top" style="height: 260px; object-fit: cover;" />
-                }
+                <div class="trainer-image">
+                    <img src="@t.ImageUrl" alt="@t.FirstName" />
+                    <span class="trainer-badge">@t.Service?.Name</span>
+                </div>
 
-                <div class="card-body">
-                    <h3>@t.FirstName @t.LastName</h3>
-                    <h6 class="text-muted">@t.Service?.Name Eğitmeni</h6>
+                <div class="trainer-body">
+                    <h4 class="fw-bold mb-1">@t.FirstName @t.LastName</h4>
+                    <p class="text-muted small mb-3">
+                        @t.Service?.Name Eğitmeni
+                    </p>
 
-                    <p>@t.Biography</p>
+                    <p class="trainer-bio">
+                        @t.Biography
+                    </p>
 
-                    <a asp-action="Details" asp-route-id="@t.Id" class="btn btn-outline-primary">
-                        Detay
-                    </a>
-
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <a asp-controller="Appointment"
-                           asp-action="CreateByTrainer"
-                           asp-route-trainerId="@t.Id"
-                           class="btn btn-success ms-2">
-                            Randevu Al
+                    <div class="trainer-actions">
+                        <a asp-controller="Trainer"
+                           asp-action="Details"
+                           asp-route-id="@t.Id"
+                           class="btn btn-outline-dark btn-sm">
+                            Profil
                         </a>
-                    }
-                    else
-                    {
-                        <a asp-controller="Account" asp-action="Login" class="btn btn-primary ms-2">
-                            Giriş Yap & Randevu Al
-                        </a>
-                    }
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a asp-controller="Appointment"
+                               asp-action="CreateByTrainer"
+                               asp-route-trainerId="@t.Id"
+                               class="btn btn-accent btn-sm">
+                                Randevu Al
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account"
+                               asp-action="Login"
+                               class="btn btn-accent btn-sm">
+                                Giriş Yap ve Randevu Al
+                            </a>
+                        }
+                    </div>
                 </div>
 
             </div>
         </div>
     }
 </div>
-
-<style>
-    .card:hover {
-        transform: scale(1.04);
-        transition: .25s;
-    }
-</style>
