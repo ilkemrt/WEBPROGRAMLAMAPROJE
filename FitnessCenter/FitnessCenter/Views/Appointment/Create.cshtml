@@ -4,7 +4,6 @@
     ViewData["Title"] = "Randevu Al";
 }
 
-
 <h2 class="mb-4">Randevu Al</h2>
 
 <div class="card shadow p-4">
@@ -17,15 +16,16 @@
         </div>
     </div>
 
-    <form asp-action="Create" method="post">
+    <form asp-action="Create" method="post" id="appointmentForm">
         @Html.AntiForgeryToken()
 
         <input type="hidden" asp-for="ServiceId" />
+        <input type="hidden" asp-for="StartHour" id="startHourInput" />
 
         <!-- ANTRENÖR -->
         <div class="mb-3">
             <label class="form-label">Antrenör</label>
-            <select asp-for="TrainerId" class="form-select">
+            <select asp-for="TrainerId" class="form-select" id="TrainerId">
                 <option value="">-- Antrenör Seçiniz --</option>
                 @foreach (var t in Model.AvailableTrainers)
                 {
@@ -35,70 +35,161 @@
             <span asp-validation-for="TrainerId" class="text-danger"></span>
         </div>
 
+        <!-- ANTRENÖR KARTI -->
+        <div id="trainerCard" class="card mb-4 d-none shadow">
+            <img id="trainerImage"
+                 class="card-img-top"
+                 style="height: 280px; object-fit: cover;" />
+
+            <div class="card-body">
+                <h5 id="trainerName" class="fw-bold mb-2"></h5>
+                <p id="trainerBio" class="text-muted mb-0"></p>
+            </div>
+        </div>
+
         <!-- TARİH -->
         <div class="mb-3">
             <label class="form-label">Tarih</label>
-            <input asp-for="Date" type="date" class="form-control" />
-            <span asp-validation-for="Date" class="text-danger"></span>
+            <input asp-for="Date" type="date" class="form-control" id="Date" />
         </div>
 
         <!-- SAAT -->
+        <div id="hourWarning" class="alert alert-danger d-none">
+            Lütfen randevu saati seçiniz.
+        </div>
+
         <div class="mb-3">
             <label class="form-label">Müsait Saatler</label>
             <div id="hoursContainer" class="d-flex flex-wrap gap-2"></div>
         </div>
 
-        <input type="hidden" asp-for="StartHour" id="startHourInput" />
-
-        <button type="submit" class="btn btn-success mt-3">
+        <button type="button" class="btn btn-success w-100" id="submitBtn">
             Randevu Oluştur
         </button>
     </form>
 </div>
 
-<script>
-    const trainer = document.getElementById("TrainerId");
-    const date = document.getElementById("Date");
-    const serviceInput = document.getElementById("ServiceId"); // Hidden input'u yakala (ASP-FOR ServiceId id'si genelde ServiceId olur)
-    const hoursDiv = document.getElementById("hoursContainer");
-    const hiddenHour = document.getElementById("startHourInput");
+@section Scripts {
+    <script>
+        const trainerSelect = document.getElementById("TrainerId");
+        const dateInput = document.getElementById("Date");
+        const serviceInput = document.getElementById("ServiceId");
+        const hoursDiv = document.getElementById("hoursContainer");
+        const hiddenHour = document.getElementById("startHourInput");
+        const submitBtn = document.getElementById("submitBtn");
+        const hourWarning = document.getElementById("hourWarning");
 
-    trainer.addEventListener("change", loadHours);
-    date.addEventListener("change", loadHours);
+        const trainerCard = document.getElementById("trainerCard");
+        const trainerName = document.getElementById("trainerName");
+        const trainerBio = document.getElementById("trainerBio");
+        const trainerImage = document.getElementById("trainerImage");
 
-    function loadHours() {
-        // serviceInput.value kontrolünü de ekleyelim
-        if (!trainer.value || !date.value || !serviceInput.value) return;
+        // -------- INITIAL STATE --------
+        window.addEventListener("load", () => {
+            if (!trainerSelect.value) {
+                resetTrainerUI();
+            } else {
+                loadTrainerInfo();
+            }
+        });
 
-        // URL'e serviceId parametresini de ekliyoruz
-        const url = `/Appointment/GetAvailableHours?trainerId=${trainer.value}&serviceId=${serviceInput.value}&date=${date.value}`;
+        // -------- EVENTS --------
+        trainerSelect.addEventListener("change", () => {
+            resetHours();
 
-        fetch(url)
-            .then(r => r.json())
-            .then(hours => {
-                hoursDiv.innerHTML = "";
+            if (!trainerSelect.value) {
+                resetTrainerUI();
+                return;
+            }
 
-                if (hours.length === 0) {
-                    hoursDiv.innerHTML = "<span class='text-danger'>Müsait saat yok</span>";
-                    return;
-                }
+            loadTrainerInfo();
+            if (dateInput.value) {
+                loadHours();
+            }
+        });
 
-                hours.forEach(h => {
-                    const btn = document.createElement("button");
-                    btn.type = "button";
-                    btn.className = "btn btn-outline-success";
-                    btn.innerText = h;
+        dateInput.addEventListener("change", () => {
+            resetHours();
+            if (trainerSelect.value) {
+                loadHours();
+            }
+        });
 
-                    btn.onclick = () => {
-                        document.querySelectorAll("#hoursContainer button")
-                            .forEach(x => x.classList.remove("active"));
-                        btn.classList.add("active");
-                        hiddenHour.value = h;
-                    };
+        // -------- FUNCTIONS --------
+        function resetTrainerUI() {
+            trainerCard.classList.add("d-none");
+            trainerName.innerText = "";
+            trainerBio.innerText = "";
+            trainerImage.src = "";
+        }
 
-                    hoursDiv.appendChild(btn);
+        function resetHours() {
+            hiddenHour.value = "";
+            hoursDiv.innerHTML = "";
+            hourWarning.classList.add("d-none");
+        }
+
+        function loadTrainerInfo() {
+            fetch(`/Appointment/GetTrainerInfo?trainerId=${trainerSelect.value}`)
+                .then(r => r.json())
+                .then(t => {
+                    trainerCard.classList.remove("d-none");
+                    trainerName.innerText = t.fullName;
+                    trainerBio.innerText = t.biography ?? "";
+                    trainerImage.src = t.imageUrl ?? "https://via.placeholder.com/400x260";
                 });
-            });
-    }
-</script>
+        }
 
+        function loadHours() {
+            if (!trainerSelect.value || !dateInput.value) return;
+
+            const url = `/Appointment/GetAvailableHours?trainerId=${trainerSelect.value}&serviceId=${serviceInput.value}&date=${dateInput.value}`;
+
+            fetch(url)
+                .then(r => r.json())
+                .then(hours => {
+                    hoursDiv.innerHTML = "";
+
+                    if (hours.length === 0) {
+                        hoursDiv.innerHTML = "<span class='text-danger'>Müsait saat yok</span>";
+                        return;
+                    }
+
+                    hours.forEach(h => {
+                        const btn = document.createElement("button");
+                        btn.type = "button";
+                        btn.className = "btn btn-outline-success";
+                        btn.innerText = h;
+
+                        btn.onclick = () => {
+                            document.querySelectorAll("#hoursContainer button")
+                                .forEach(x => x.classList.remove("active"));
+                            btn.classList.add("active");
+                            hiddenHour.value = h;
+                        };
+
+                        hoursDiv.appendChild(btn);
+                    });
+                });
+        }
+
+        // -------- SUBMIT --------
+        submitBtn.addEventListener("click", () => {
+            if (!trainerSelect.value) {
+                alert("Lütfen antrenör seçiniz.");
+                return;
+            }
+
+            if (!hiddenHour.value) {
+                hourWarning.classList.remove("d-none");
+                hourWarning.scrollIntoView({ behavior: "smooth" });
+                return;
+            }
+
+            submitBtn.closest("form").submit();
+        });
+    </script>
+
+
+    <partial name="_ValidationScriptsPartial" />
+}

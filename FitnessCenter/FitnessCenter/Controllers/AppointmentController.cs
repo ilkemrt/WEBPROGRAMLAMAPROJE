@@ -59,7 +59,7 @@ namespace FitnessCenter.Web.Controllers
                 Price = service.Price,
                 AvailableTrainers = trainers,
                 Date = DateTime.Today,
-                TrainerId = trainers[0].Id // default ilk trainer
+                
             };
 
             vm.AvailableHours = await _appointmentService.GetAvailableHours(vm.TrainerId, vm.Date, vm.Duration);
@@ -169,6 +169,8 @@ namespace FitnessCenter.Web.Controllers
                 Price = trainer.Service.Price,
                 Date = DateTime.Today,
 
+
+
                 AvailableTrainers = new List<TrainerSelectItem>
         {
             new TrainerSelectItem
@@ -183,6 +185,24 @@ namespace FitnessCenter.Web.Controllers
                 .GetAvailableHours(trainer.Id, vm.Date, vm.Duration);
 
             return View("Create", vm); // mevcut Create.cshtml
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetTrainerInfo(int trainerId)
+        {
+            var trainer = await _context.Trainers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Id == trainerId);
+
+            if (trainer == null)
+                return NotFound();
+
+            return Json(new
+            {
+                trainer.Id,
+                FullName = trainer.FirstName + " " + trainer.LastName,
+                trainer.Biography,
+                trainer.ImageUrl
+            });
         }
 
 
