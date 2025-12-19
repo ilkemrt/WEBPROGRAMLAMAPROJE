@@ -38,8 +38,8 @@
         <!-- ANTRENÖR KARTI -->
         <div id="trainerCard" class="card mb-4 d-none shadow">
             <img id="trainerImage"
-                 class="card-img-top"
-                 style="height: 280px; object-fit: cover;" />
+                 class="img-fluid rounded-top"
+                 style="max-height: 420px; width: 100%; object-fit: contain; background:#f8f9fa;" />
 
             <div class="card-body">
                 <h5 id="trainerName" class="fw-bold mb-2"></h5>
@@ -115,7 +115,7 @@
             }
         });
 
-        // -------- FUNCTIONS --------
+        // -------- FONKSİYONLAR --------
         function resetTrainerUI() {
             trainerCard.classList.add("d-none");
             trainerName.innerText = "";
@@ -173,7 +173,7 @@
                 });
         }
 
-        // -------- SUBMIT --------
+       
         submitBtn.addEventListener("click", () => {
             if (!trainerSelect.value) {
                 alert("Lütfen antrenör seçiniz.");

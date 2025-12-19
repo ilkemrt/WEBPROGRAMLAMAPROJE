@@ -138,11 +138,11 @@ namespace FitnessCenter.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAvailableHours(int trainerId, int serviceId, DateTime date)
         {
-            // 1. Hizmetin gerçek süresini bul
+            //  Hizmetin gerçek süresini bul
             var service = await _context.Services.FindAsync(serviceId);
             if (service == null) return BadRequest();
 
-            // 2. O süreyi metoda gönder (120 yerine service.Duration)
+           
             var hours = await _appointmentService.GetAvailableHours(trainerId, date, service.Duration);
 
             return Json(hours.Select(h => h.ToString(@"hh\:mm")));

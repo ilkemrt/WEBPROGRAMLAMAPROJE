@@ -52,12 +52,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// ✔️ DOĞRU AREA ROUTE
+// DOĞRU AREA ROUTE
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller}/{action=Index}/{id?}");
 
-// ✔️ DEFAULT ROUTE
+//  DEFAULT ROUTE
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

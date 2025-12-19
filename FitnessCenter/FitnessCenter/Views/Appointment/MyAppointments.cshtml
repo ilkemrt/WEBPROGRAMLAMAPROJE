@@ -1,43 +1,99 @@
 ﻿@model IEnumerable<Appointment>
 
-<h2>Randevularım</h2>
+@{
+    ViewData["Title"] = "Randevularım";
+}
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Hizmet</th>
-            <th>Antrenör</th>
-            <th>Tarih</th>
-            <th>Durum</th>
-            <th>Ücret</th>
-        </tr>
-    </thead>
+<div class="container my-5">
 
-    <tbody>
-        @foreach (var a in Model)
-        {
-            <tr>
-                <td>@a.Service.Name</td>
-                <td>@a.Trainer.FirstName @a.Trainer.LastName</td>
-                <td>@a.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">📅 Randevularım</h2>
+            <p class="text-muted mb-0">
+                Tüm geçmiş ve yaklaşan randevularını buradan takip edebilirsin.
+            </p>
+        </div>
+    </div>
 
-                <td>
-                    @if (a.Status == AppointmentStatus.Pending)
-                    {
-                        <span class="badge bg-warning">Beklemede</span>
-                    }
-                    else if (a.Status == AppointmentStatus.Approved)
-                    {
-                        <span class="badge bg-success">Onaylandı</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">Reddedildi</span>
-                    }
-                </td>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center py-5 shadow-sm">
+            <h5 class="mb-2">Henüz randevun yok</h5>
+            <p class="mb-3 text-muted">Hemen bir hizmet seçip randevu alabilirsin.</p>
 
-                <td>@a.Price ₺</td>
-            </tr>
-        }
-    </tbody>
-</table>
+            <a asp-controller="Service" asp-action="Index"
+               class="btn btn-success btn-lg">
+                Hizmetleri İncele
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Hizmet</th>
+                            <th>Antrenör</th>
+                            <th>Tarih</th>
+                            <th>Durum</th>
+                            <th class="text-end">Ücret</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var a in Model)
+                        {
+                            <tr>
+                                <td class="fw-semibold">
+                                    @a.Service.Name
+                                </td>
+
+                                <td>
+                                    @a.Trainer.FirstName @a.Trainer.LastName
+                                </td>
+
+                                <td>
+                                    <div class="fw-semibold">
+                                        @a.StartTime.ToString("dd MMM yyyy")
+                                    </div>
+                                    <div class="text-muted small">
+                                        @a.StartTime.ToString("HH:mm")
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @if (a.Status == AppointmentStatus.Pending)
+                                    {
+                                        <span class="badge bg-warning text-dark px-3 py-2">
+                                            ⏳ Beklemede
+                                        </span>
+                                    }
+                                    else if (a.Status == AppointmentStatus.Approved)
+                                    {
+                                        <span class="badge bg-success px-3 py-2">
+                                            ✅ Onaylandı
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger px-3 py-2">
+                                            ❌ Reddedildi
+                                        </span>
+                                    }
+                                </td>
+
+                                <td class="text-end fw-bold text-success">
+                                    @a.Price ₺
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+</div>
