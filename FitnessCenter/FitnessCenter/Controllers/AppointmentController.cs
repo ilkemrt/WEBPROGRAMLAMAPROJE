@@ -46,7 +46,7 @@ namespace FitnessCenter.Web.Controllers
 
             if (trainers.Count == 0)
             {
-                // Hizmet var ama eğitmen yoksa kullanıcıya düzgün mesaj verelim
+                // Hizmet var ama eğitmen yoksa kullanıcıya düzgün mesaj ver
                 TempData["Error"] = "Bu hizmet için henüz antrenör tanımlanmamış.";
                 return RedirectToAction("Details", "Service", new { id = serviceId });
             }
@@ -75,11 +75,9 @@ namespace FitnessCenter.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AppointmentCreateViewModel vm)
         {
-
             var service = await _context.Services.FindAsync(vm.ServiceId);
             if (service == null) return NotFound();
 
-            // dropdownlar her durumda dolmalı
             vm.AvailableTrainers = await _context.Trainers
                 .AsNoTracking()
                 .Where(t => t.ServiceId == vm.ServiceId)
@@ -94,24 +92,24 @@ namespace FitnessCenter.Web.Controllers
             vm.Price = service.Price;
             vm.ServiceName = service.Name;
 
-            // Trainer seçildiyse saatleri tekrar doldur
             if (vm.TrainerId > 0)
-                vm.AvailableHours = await _appointmentService.GetAvailableHours(vm.TrainerId, vm.Date, vm.Duration);
+                vm.AvailableHours = await _appointmentService
+                    .GetAvailableHours(vm.TrainerId, vm.Date, vm.Duration);
+
+            //  KRİTİK KONTROL
+            if (vm.StartHour == null)
+            {
+                ModelState.AddModelError(nameof(vm.StartHour), "Lütfen randevu saati seçiniz.");
+            }
 
             if (!ModelState.IsValid)
                 return View(vm);
 
-            // Güvenlik: Trainer gerçekten bu service'e ait mi?
-            var trainerOk = await _context.Trainers.AnyAsync(t => t.Id == vm.TrainerId && t.ServiceId == vm.ServiceId);
-            if (!trainerOk)
-            {
-                ModelState.AddModelError(nameof(vm.TrainerId), "Seçilen antrenör bu hizmete ait değil.");
-                return View(vm);
-            }
+            var startTime = vm.Date.Date + vm.StartHour.Value;
 
-            var startTime = vm.Date.Date + vm.StartHour;
+            var isAvailable = await _appointmentService
+                .IsTrainerAvailable(vm.TrainerId, startTime, service.Duration);
 
-            var isAvailable = await _appointmentService.IsTrainerAvailable(vm.TrainerId, startTime, service.Duration);
             if (!isAvailable)
             {
                 ModelState.AddModelError("", "Seçilen gün/saat için antrenör müsait değil.");

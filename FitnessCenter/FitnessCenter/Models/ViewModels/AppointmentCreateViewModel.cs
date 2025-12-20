@@ -13,9 +13,9 @@ namespace FitnessCenter.Web.Models.ViewModels
         // sadece tarih
         public DateTime Date { get; set; } = DateTime.Today;
 
-        // sadece saat (08:00 vs)
+        // sadece saat (08:00 vb)
         [Required(ErrorMessage = "Saat seçmek zorunludur")]
-        public TimeSpan StartHour { get; set; }
+        public TimeSpan? StartHour { get; set; }
 
         public int Duration { get; set; }
         public decimal Price { get; set; }

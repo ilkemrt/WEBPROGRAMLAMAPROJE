@@ -90,6 +90,7 @@
                 resetTrainerUI();
             } else {
                 loadTrainerInfo();
+                 loadHours();
             }
         });
 
@@ -175,19 +176,31 @@
 
        
         submitBtn.addEventListener("click", () => {
-            if (!trainerSelect.value) {
-                alert("Lütfen antrenör seçiniz.");
-                return;
-            }
+                   if (!trainerSelect.value) {
+            alert("Lütfen antrenör seçiniz.");
+            return;
+        }
 
-            if (!hiddenHour.value) {
-                hourWarning.classList.remove("d-none");
-                hourWarning.scrollIntoView({ behavior: "smooth" });
-                return;
-            }
+        if (!dateInput.value) {
+            alert("Lütfen tarih seçiniz.");
+            return;
+        }
 
-            submitBtn.closest("form").submit();
+        if (!hiddenHour.value) {
+            hourWarning.classList.remove("d-none");
+            hourWarning.scrollIntoView({ behavior: "smooth" });
+            return;
+        }
+
+        submitBtn.closest("form").submit();
+
+
+
+
         });
+
+         
+
     </script>
 
 

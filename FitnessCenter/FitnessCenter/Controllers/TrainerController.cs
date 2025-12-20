@@ -23,7 +23,7 @@ namespace FitnessCenter.Web.Controllers
             return View(trainers);
         }
 
-        // DETAY SAYFASI (İSTEĞE BAĞLI)
+        // DETAY SAYFASI
         public async Task<IActionResult> Details(int id)
         {
             var trainer = await _context.Trainers

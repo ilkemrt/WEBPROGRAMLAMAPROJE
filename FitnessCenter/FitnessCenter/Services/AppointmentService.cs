@@ -13,7 +13,7 @@ namespace FitnessCenter.Web.Services
             _context = context;
         }
 
-        // Trainer'ın seçilen gün çalışma aralığı var mı?
+        // Trainer'ın seçilen gün çalışma aralığı var mı kontrolü
         public async Task<TrainerWorkingHour?> GetWorkingHour(int trainerId, DateTime date)
         {
             var day = date.DayOfWeek;
@@ -23,7 +23,7 @@ namespace FitnessCenter.Web.Services
                 .FirstOrDefaultAsync(x => x.TrainerId == trainerId && x.DayOfWeek == day);
         }
 
-        // Çakışma var mı?
+        // Çakışma var mı kontrolü
         public async Task<bool> HasConflict(int trainerId, DateTime startTime, int duration)
         {
             var endTime = startTime.AddMinutes(duration);
@@ -36,7 +36,7 @@ namespace FitnessCenter.Web.Services
             );
         }
 
-        // Hem çalışma saatine uyuyor mu hem çakışma yok mu?
+        // Hem çalışma saatine uyuyor mu hem çakışma yok mu kontrolü
         public async Task<bool> IsTrainerAvailable(int trainerId, DateTime startTime, int duration)
         {
             var wh = await GetWorkingHour(trainerId, startTime);
@@ -51,7 +51,7 @@ namespace FitnessCenter.Web.Services
             return !await HasConflict(trainerId, startTime, duration);
         }
 
-        // UI için uygun saatleri üret (her saat başı) — basit ve sağlam
+        // UI için uygun saatleri üret (her saat başı) 
         public async Task<List<TimeSpan>> GetAvailableHours(
         int trainerId,
         DateTime date,
@@ -77,7 +77,7 @@ namespace FitnessCenter.Web.Services
                 var start = date.Date + cursor.ToTimeSpan();
                 var end = start.AddMinutes(serviceDurationMinutes);
 
-                // çalışma saatini aşıyor mu?
+                // çalışma saatini aşıyor mu kontrolü
                 if (end.TimeOfDay > workingHour.EndTime.ToTimeSpan())
                     break;
 
@@ -88,7 +88,7 @@ namespace FitnessCenter.Web.Services
                     continue;
                 }
 
-                // çakışma var mı?
+                // çakışma var mı kontrolü
                 var conflict = await HasConflict(trainerId, start, serviceDurationMinutes);
                 if (!conflict)
                     result.Add(cursor.ToTimeSpan());

@@ -18,7 +18,7 @@ namespace FitnessCenter.Web.Models.ViewModels
         [Required]
         public int ServiceId { get; set; }
 
-        // 🔥 çalışma düzeni
+        //  çalışma düzeni
         public List<DayOfWeek> WorkingDays { get; set; } = new();
 
         public TimeOnly StartTime { get; set; }

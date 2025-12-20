@@ -57,7 +57,7 @@ namespace FitnessCenter.Web.Areas.Admin.Controllers
             _context.Trainers.Add(trainer);
             await _context.SaveChangesAsync();
 
-            // 🔥 ÇALIŞMA GÜNLERİ KAYDI
+            // ÇALIŞMA GÜNLERİ KAYDI
             foreach (var day in model.WorkingDays)
             {
                 var workingHour = new TrainerWorkingHour
@@ -124,10 +124,10 @@ namespace FitnessCenter.Web.Areas.Admin.Controllers
             trainer.ImageUrl = vm.ImageUrl;
             trainer.ServiceId = vm.ServiceId;
 
-            // 🔥 eski saatleri sil
+            //  eski saatleri sil
             _context.TrainerWorkingHours.RemoveRange(trainer.WorkingHours);
 
-            // 🔥 yenilerini ekle
+            //  yenilerini ekle
             foreach (var day in vm.WorkingDays)
             {
                 _context.TrainerWorkingHours.Add(new TrainerWorkingHour

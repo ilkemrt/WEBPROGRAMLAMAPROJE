@@ -1,4 +1,5 @@
 ﻿using FitnessCenter.Web.Data;
+using FitnessCenter.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,21 +16,26 @@ namespace FitnessCenter.Web.Controllers.Api
             _context = context;
         }
 
-        // GET: api/appointments/member/USERID
-        [HttpGet("member/{userId}")]
-        public async Task<IActionResult> GetMemberAppointments(string userId)
+        // GET: api/AppointmentsApi
+        [HttpGet]
+        public async Task<IActionResult> GetAllAppointments()
         {
             var appointments = await _context.Appointments
                 .Include(a => a.Service)
                 .Include(a => a.Trainer)
-                .Where(a => a.MemberId == userId)
                 .Select(a => new
                 {
                     a.Id,
+                    a.MemberId,
                     Service = a.Service.Name,
                     Trainer = a.Trainer.FirstName + " " + a.Trainer.LastName,
                     a.StartTime,
-                    a.Status
+                    Status = a.Status == AppointmentStatus.Pending
+                        ? "Beklemede"
+                        : a.Status == AppointmentStatus.Approved
+                            ? "Onaylandı"
+                            : "Reddedildi",
+                    a.Price
                 })
                 .OrderByDescending(a => a.StartTime)
                 .ToListAsync();
